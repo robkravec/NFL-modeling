@@ -1,0 +1,14 @@
+---
+title: "NFL Modeling"
+author: "Marc Brooks and Rob Kravec"
+date: "12/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Set chunk options
+knitr::opts_chunk$set(echo = TRUE, message = F, warning = F)
+
+# Load libraries
+library(tidyverse)
+```
