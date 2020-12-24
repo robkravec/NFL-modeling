@@ -16,6 +16,9 @@ time remaining in game, score), team formations, and play outcome (e.g., yardage
 measurements for each player at points in time. Offensive and defensive linemen are largely excluded
 - Player data (not used for this project): Identifying information for NFL players
 
+Since the files are quite large, our Makefile contains a script to download the data directly
+from Kaggle, and the data is not stored in this repository.
+
 ## Results
 
 ...
