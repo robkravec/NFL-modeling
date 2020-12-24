@@ -11,4 +11,5 @@ knitr::opts_chunk$set(echo = TRUE, message = F, warning = F)
 
 # Load libraries
 library(tidyverse)
+library(pscl)
 ```
