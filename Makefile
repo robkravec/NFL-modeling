@@ -1,12 +1,10 @@
-NFL_modeling.html: NFL_modeling.Rmd data/*.csv
+NFL_modeling.html: NFL_modeling.Rmd data/nfl-big-data-bowl-2021.zip
 	Rscript -e "rmarkdown::render('NFL_modeling.Rmd')"
-
-data/*.csv: scripts/process_data.R data/nfl-big-data-bowl-2021.zip
-	Rscript $<
 
 data/nfl-big-data-bowl-2021.zip: 
 	mkdir -p $(@D)
 	cd $(@D); kaggle competitions download -c nfl-big-data-bowl-2021
+	unzip $@ -d $(@D)
 	
 clean_data:
 	rm -rf data/
