@@ -5,7 +5,6 @@ library(tidyverse)
 library(vroom)
 
 # Unzip .zip file downloaded directly from Kaggle site
-unzip(zipfile = "data/nfl-big-data-bowl-2021.zip", exdir = "data/")
 
 # Read in game and play data
 games <- vroom("data/games.csv")
@@ -27,8 +26,8 @@ plays <- vroom("data/plays.csv",
     typeDropback = "f",
     penaltyCodes = "f",
     penaltyJerseyNumbers = "f",
-    yardlineSide = "f",
-    possessionTeam = "f"
+    yardlineSide = "c",
+    possessionTeam = "c"
   )
 )
 
@@ -44,13 +43,35 @@ play_game <- play_game %>%
            abs(preSnapHomeScore - preSnapVisitorScore) >= 21 ~ 1,
            abs(preSnapHomeScore - preSnapVisitorScore) > 14 & quarter == 4 ~ 1,
            TRUE ~ 0),
-         penalty_flag = ifelse(offensePlayResult != playResult, 1, 0)
+         penalty_flag = ifelse(offensePlayResult != playResult, 1, 0),
+         yards_to_endzone = case_when(
+                    yardlineNumber == 50 ~ 50,
+                    possessionTeam == yardlineSide ~ 100 -yardlineNumber,
+                    TRUE  ~ yardlineNumber)
          ) %>% 
-  filter(penalty_flag == 0 
+  filter(penalty_flag == 0 ,
+         offensePlayResult >= 0,
          #,not_competitive == 0
-         ,passResult != "S"
+         passResult != "S"
          #,offenseFormation!="JUMBO"
          #,offenseFormation!="WILDCAT"
          #,typeDropback!="UNKNOWN"
          )
 
+
+# Read tracking features 
+tracking_feat <- read_csv("data/ballsnap_features.csv")
+
+
+# Join data 
+play_game <- inner_join(play_game, 
+                        tracking_feat,
+                        on =  c("gameId", "playId", "week"))
+
+# train test split 
+n <- nrow(play_game)
+train = sample(1:n, size = round(.8*n))
+test = -1*train
+
+write_csv(play_game[train, ], "./data/train.csv")
+write_csv(play_game[test, ], "./data/test.csv")
