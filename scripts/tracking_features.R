@@ -2,10 +2,9 @@ library(vroom)
 library(tidyverse)
 library(dplyr)
 
-games <- vroom("./data/games.csv")
-#players <- vroom("./data/players.csv")
+games <- vroom("data/games.csv")
 plays <- vroom(
-  "./data/plays.csv",
+  "data/plays.csv",
   col_types = c(
     quarter = "f",
     down = "f",
@@ -29,7 +28,7 @@ plays <- vroom(
 )
 
 # Read in player data
-players <- vroom("./data/players.csv")
+players <- vroom("data/players.csv")
 
 proc_height <- function(elt) {
   if (length(elt) == 2) {
@@ -47,7 +46,7 @@ players <-  players %>% dplyr::select(nflId, weight, height_in, age)
 
 # Function to  process tracking data (at ball snap) for each week
 wkly_tracking_summary <- function(week) {
-  wk_path <- paste("data/week", week, ".csv.zip", sep = "")
+  wk_path <- paste("data/week", week, ".csv", sep = "")
   wk_data <- vroom(wk_path,
                    col_types = c(nflId = "d",
                                  displayName = "f",
